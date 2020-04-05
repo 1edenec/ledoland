@@ -1,0 +1,4 @@
+ #!/bin/sh
+killall scrcpy
+ scrcpy -s 192.173.1.5:5555
+

@@ -1,0 +1,57 @@
+#!/bin/bash
+# simple brightness control script
+# with notifications
+#
+#
+pid="1283"
+iconpath="/usr/share/icons/Papirus/48x48/status/"
+br_full="notification-display-brightness-full.svg"
+br_high="notification-display-brightness-high.svg"
+br_med="notification-display-brightness-medium.svg"
+br_low="notification-display-brightness-low.svg"
+nothead="Brightness:"
+time=3000
+incr=10
+
+geticon(){
+    if (( $text == 100))
+	then icon=$br_full
+	else
+	    if (( $text > 66 ))
+		then icon=$br_high
+		else
+		    if (( $text > 33))
+			then icon=$br_med
+			else icon=$br_low
+		    fi
+	    fi
+    fi
+    text="$text"%
+}
+
+up(){
+
+    xbacklight -inc $incr
+    text=$(xbacklight -get)
+    if (( $text == 100))
+	then text="max"
+	icon=$br_full
+	else
+	geticon
+    fi
+}
+
+down(){
+	xbacklight -dec $incr
+	text=$(xbacklight -get)
+	geticon
+    }
+
+case  $1 in
+	up) up ;;
+	down) down;;
+esac
+
+dunstify -i $iconpath$icon  -t $time -r $pid $nothead $text
+
+
