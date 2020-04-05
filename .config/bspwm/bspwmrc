@@ -6,7 +6,6 @@ setbg
 $HOME/.config/polybar/launch.sh
 $HOME/.config/bspwm/bspwm_monitors
 
-bspc config remove_disabled_monitors true
 bspc config remove_unplugged_monitors true
 
 ### Colors
