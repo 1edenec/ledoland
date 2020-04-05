@@ -30,14 +30,14 @@ geticon(){
 }
 
 up(){
-
     xbacklight -inc $incr
     text=$(xbacklight -get)
-    if (( $text == 100))
-	then text="max"
-	icon=$br_full
-	else
-	geticon
+		if (( $text == 100))
+			then 
+				text="max"
+				icon=$br_full
+			else
+		geticon
     fi
 }
 
@@ -45,7 +45,7 @@ down(){
 	xbacklight -dec $incr
 	text=$(xbacklight -get)
 	geticon
-    }
+}
 
 case  $1 in
 	up) up ;;
