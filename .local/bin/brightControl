@@ -33,7 +33,7 @@ up(){
     xbacklight -inc $incr
     text=$(xbacklight -get)
 		if (( $text == 100))
-			then 
+			then
 				text="max"
 				icon=$br_full
 			else
