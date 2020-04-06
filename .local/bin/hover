@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+offset=7 # this is offset to show window border. just for fun
+current=$(xdotool getwindowfocus)
+
+monwidth=$(xdotool getdisplaygeometry | awk '{print $1}')
+monheight=$(xdotool getdisplaygeometry | awk '{print $2}')
+
+newwidth=$((monwidth / 3))
+newheight=$((monheight / 3))
+
+case "$1" in
+	left) 	hor=$offset ;\
+		vert=$((monheight - newheight - offset));;
+	right)	hor=$((monwidth - newwidth - offset)); \
+		vert=$((monheight - newheight - offset));;
+esac
+
+
+bspc node --state \~floating
+bspc node -g sticky
+xdotool windowsize "$current"  "$newwidth" "$newheight"
+xdotool windowmove "$current" "$hor" "$vert"
+

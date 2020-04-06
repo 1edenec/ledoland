@@ -1,0 +1,20 @@
+#!/bin/bash
+
+did="-r 1408"
+HEADER="SYSTEM:"
+THEME="/usr/share/icons/Papirus/48x48/status/"
+ICON="input-touchpad-on.svg"
+ICOFF="input-touchpad-off.svg"
+
+declare -i ID
+ID=`xinput list | grep -Eio 'touchpad\s*id\=[0-9]{1,2}' | grep -Eo '[0-9]{1,2}'`
+declare -i STATE
+STATE=`xinput list-props $ID|grep 'Device Enabled'|awk '{print $4}'`
+if [ $STATE -eq 1 ]
+then
+    xinput disable $ID
+    dunstify $did -i $THEME$ICOFF $HEADER "Touchpad is OFF"
+else
+    xinput enable $ID
+    dunstify $did -i $THEME$ICON $HEADER "Touchpad is ON"
+fi

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+did="-r 1408"
+HEADER="SYSTEM:"
+THEME="/usr/share/icons/Papirus/48x48/status/"
+ICON="camera-on.svg"
+ICOFF="camera-off.svg"
+#cam='pkill -f /dev/video0 || mpv --no-osc --no-input-default-bindings --input-conf=/dev/null --geometry=-0-0 --autofit=30%  --title="mpvfloat" /dev/video0'
+
+sleep 0.5
+[ -e /dev/video0 ] \
+	&&  dunstify $did -i $THEME$ICON $HEADER "camera is ON"   \
+	||  dunstify $did -i $THEME$ICOFF $HEADER "camera is OFF"
+
