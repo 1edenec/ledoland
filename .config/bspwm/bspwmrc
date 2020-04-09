@@ -1,15 +1,19 @@
-#! /bin/sh
+#!/bin/bash
 sxhkd &
-xsetroot -cursor_name left_ptr &
 bspc monitor -g 1920x1080+0+0
-setbg
-$HOME/.config/polybar/launch.sh
+xsetroot -cursor_name left_ptr &
+setbg &
+
 $HOME/.config/bspwm/bspwm_monitors
+$HOME/.config/polybar/launch.sh
+
+#get monitor dimensions for mpv, tmux and other scratches))
+. ~/.config/bspwm/bspwm_dimensions
 
 bspc config remove_unplugged_monitors true
 
 ### Colors
-##############################################
+
 . "${HOME}/.config/bspwm/color"
 
 bspc config border_width         2
@@ -41,14 +45,14 @@ bspc config pointer_modifier 	  control
 bscp rule -a polybar manage=off
 
 # Rules
-
 bspc rule -a scratch_vifm sticky=on state=floating rectangle=1400x800+0+0 center on
 bspc rule -a scratch_pulse sticky=on state=floating rectangle=1000x300+0+0 center on
+bspc rule -a scratch_bc sticky=on state=floating rectangle=1000x300+0+0 center on
+bspc rule -a scratch_tmux sticky=on state=floating rectangle="$tmuxwidth"x"$newheight"+"$offset"+"$tmuxvert"
 
-#bspc rule -a St:Tiled desktop='^1' follow=on
-bspc rule -a '*Picture in picture' state=floating sticky=off desktop='^8'
+bspc rule -a firefox desktop='^2' follow=on
+bspc rule -a firefox:Toolkit state=floating sticky=on
 bspc rule -a Doublecmd desktop='^4'
-bspc rule -a Vivaldi-stable desktop='^2' follow=on
 bspc rule -a KotatogramDesktop desktop='^5'
 bspc rule -a Gimp desktop='^6'
 bspc rule -a Zathura desktop='^7' state=tiled follow=on
@@ -65,4 +69,6 @@ bspc rule -a qt5ct state=floating rectangle=700x470+0+0 center=on
 bspc rule -a SimpleScreenRecorder state=floating
 bspc rule -a Sxiv state=floating
 bspc rule -a St:Nmtui rectangle=700x470+0+0 state=floating center=on
+bspc rule -a mpv state=floating sticky=on rectangle="$newwidth"x"$newheight"+"$hor"+"$vert"
+
 

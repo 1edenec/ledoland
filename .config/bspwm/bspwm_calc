@@ -1,0 +1,4 @@
+#!/bin/bash
+st -e echo "hui"
+
+

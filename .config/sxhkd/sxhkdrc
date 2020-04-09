@@ -1,0 +1,209 @@
+#
+# wm independent hotkeys
+#
+# terminal emulator
+super + Return
+	$TERMINAL
+
+#dropdown terminal
+super + slash
+	scratch scratch_tmux dropdowntmux
+
+super + Escape
+	$TERMINAL -e nvim ~/.config/sxhkd/sxhkdrc
+
+# Programms
+super + shift + y
+	dunstify "System" "mpv is on his way...)" && \
+	mpv $(xclip -o -selection primary)
+
+super + {w,m,b,l}
+	{firefox, \
+	$TERMINAL -e ncmpcpp, \
+	bluetoggle, \
+	i3lock-fancy}
+
+#calculator
+super + a
+	scratch scratch_bc dropdowncalc
+
+alt + Tab
+	rofi -show  window
+
+super + e
+	scratch "scratch_vifm" "vifmrun"
+
+super + s
+	$TERMINAL -e zsh -c 'vifm "$(find . -type d | fzf)";'
+
+super + shift + e
+	scratch "scratch_pulse" "pulsemixer"
+
+super + shift + g
+	gimp
+
+super + F{1-9,10,11,12}
+	{ducksearch, \
+	 bspc wm -r; notify-send "System" "BSPWM was restarting...",  \
+	displayselect, \
+	dmenupoweroff, \
+	$netrefresh, \
+	torwrap, \
+	td-toggle, \
+	mailsync, \
+	dmenumount, \
+	dmenuumount, \
+	ducksearch, \
+	$TERMINAL -n Nmtui -e nmtui}
+
+# screenshots
+{_,shift,alt} + Print
+	flameshot {gui, \
+		   full -c -p $HOME/, \
+		   full -c -d 3000 -p $HOME/}
+super + Print
+	dmenurecord
+super + delete
+	dmenurecord kill
+
+# mpc
+super + p
+	mpc toggle
+super + {plus,minus}
+	amixer sset Master {5%+,5%-}
+super + {comma,period,bracketleft,bracketright}
+	mpc {prev,next,seek -20,seek +20}
+
+# dmenuscripts
+super + grave
+	dmenuunicode
+super + Insert
+	showclip
+super + {_,shift} + d
+	{dmenu_run, rofi -show drun}
+super + x
+	dmenugames
+#
+# fn keys
+#
+
+XF86MonBrightness{Down,Up}
+	brightControl {down,up}
+
+XF86Audio{Mute,LowerVolume,RaiseVolume}
+	volControl {mute,down,up}
+
+XF86TouchpadToggle
+	touchpadtoggle
+
+XF86WebCam
+	camtoggle
+#
+# bspwm hotkeys
+#
+
+# close and kill
+super + {_,shift + }q
+	bspc node -{c,k}
+
+# alternate between the tiled and monocle layout
+super + shift + m
+	bspc desktop -l next ; \
+	notify-send "WARNIGN" "Monocle watch!"
+
+# swap the current node and the biggest node
+super + g
+	bspc node -s biggest.local
+
+#
+# state/flags
+#
+
+# set the window state
+super + shift + t
+	[ -z "$(bspc query -N -n focused.pseudo_tiled)" ] && \
+	(bspc node focused -t pseudo_tiled ; dunstify -r 1204 "BSPWM" "Pseudo tiled") || \
+    (bspc node focused -t tiled ; dunstify -r 1204 "BSPWM" "Tiled")
+
+# toggle fullscreen
+super + f
+    [ -z "$(bspc query -N -n focused.fullscreen)" ] && \
+	(bspc node focused -t fullscreen ; dunstify -r 1204 "BSPWM" "Fullscreened") || \
+    (bspc node focused -t tiled ; dunstify -r 1204 "BSPWM" "Tiled")
+
+# Toggle floating
+super + t
+	[ -z "$(bspc query -N -n focused.floating)" ] && \
+	(bspc node focused -t floating ; dunstify -r 1204 "BSPWM" "Floated") || \
+    (bspc node focused -t tiled ; dunstify -r 1204 "BSPWM" "Tiled")
+
+# set the node flags
+super + ctrl + {m,l,s,p}
+	win_flags {marked,locked,sticky,private}
+#
+# focus/swap
+#
+
+# focus / move the node in the given direction
+super + {_,shift + }{Left,Down,Up,Right}
+	bspc node -{f,s} {west,south,north,east}
+
+# focus the next/previous node in the current desktop
+super + {_,shift + }c
+	bspc node -f {next,prev}.local
+
+# focus or send to the given desktop
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} ^{1-9,10}
+
+# focus the last node/desktop
+super + Tab
+	bspc desktop -f last
+# switch to next connected monitor
+super + shift + grave
+	bspc node --to-monitor next
+
+#
+# preselect
+#
+
+# preselect the direction
+super + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
+
+# preselect the ratio
+super + ctrl + {1-9}
+	bspc node -o 0.{1-9}
+
+# cancel the preselection for the focused node
+super + ctrl + space
+	bspc node -p cancel
+
+#
+# move/resize
+#
+
+# expand a window by moving one of its side outward
+super + alt + {h,j,k,l}
+	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+# contract a window by moving one of its side inward
+super + alt + shift + {h,j,k,l}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# move a floating window
+super + ctrl + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# Right / left corner
+super + shift + {b,n}
+	hover {left,right}
+
+# rotate desktop
+super +{_,shift} + r
+	bspc node @/ -R {90,270}
+
+# mouse actions
+super + button{1-3}
+	bspc pointer -g {move,resize_side,resize_corner}
+

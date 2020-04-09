@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/bash
 offset=7 # this is offset to show window border. just for fun
 current=$(xdotool getwindowfocus)
 
@@ -9,12 +9,15 @@ newwidth=$((monwidth / 3))
 newheight=$((monheight / 3))
 
 case "$1" in
-	left) 	hor=$offset ;\
-		vert=$((monheight - newheight - offset));;
-	right)	hor=$((monwidth - newwidth - offset)); \
-		vert=$((monheight - newheight - offset));;
+	left)
+		hor=$offset \
+		vert=$((monheight - newheight - offset)) \
+	;;
+	right)
+		hor=$((monwidth - newwidth - offset)) \
+		vert=$((monheight - newheight - offset)) \
+	;;
 esac
-
 
 bspc node --state \~floating
 bspc node -g sticky

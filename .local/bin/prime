@@ -2,7 +2,5 @@
 # This file to use nvidia everywhere
 xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --auto
-## If monitor connected via HDMI all wil be good
-## Else - nothing will happend.
 
 

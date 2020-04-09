@@ -1,24 +1,24 @@
 #!/bin/bash
 
-QTY=$(bspc query -M | wc | awk '{print $1}')
 
-onemon(){\
+onemon(){
 	bspc monitor -d I II III IV V VI VII VIII IX X
 }
 
-twomon(){\
+twomon(){
 	xrandr --output HDMI-0 --mode 1920x1080 --right-of eDP-1-1 && \
-	xrandr --output eDP-1-1  --primary --mode 1920x1080 && \
+	xrandr --output eDP-1-1  --primary --mode 1920x1080
 	bspc monitor $(bspc query -M | sed -n 1p) -d I II III IV V VI VII VIII
 	bspc monitor $(bspc query -M | sed -n 2p) -d IX X
 }
 
-threemon(){\
+threemon(){
 	bspc monitor $(bspc query -M | sed -n 1p) -d I II III IV V VI
 	bspc monitor $(bspc query -M | sed -n 2p) -d VII VIII
 	bspc monitor $(bspc query -M | sed -n 3p) -d IX X
 }
 
+QTY=$(bspc query -M | wc | awk '{print $1}')
 case  $QTY in
 	1) onemon ;;
 	2) twomon ;;

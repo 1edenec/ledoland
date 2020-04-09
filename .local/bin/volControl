@@ -2,11 +2,11 @@
 # simple volume notification script
 #
 pid="1283"
-iconpath="/usr/share/icons/buuf-icons-for-plasma/32x32/status/"
-vol_high="audio-volume-high.png"
-vol_med="audio-volume-medium.png"
-vol_low="audio-volume-low.png"
-muted="audio-volume-muted.png"
+iconpath="/usr/share/icons/Papirus/48x48/status/"
+vol_high="notification-audio-volume-high.svg"
+vol_med="notification-audio-volume-medium.svg"
+vol_low="notification-audio-volume-low.svg"
+muted="notification-audio-volume-muted.svg"
 nothead="Volume:"
 incr=10
 
