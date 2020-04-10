@@ -1,4 +1,5 @@
 #!/bin/bash
+# A little to turn on/of touchpad. It also show some notification.
 
 did="-r 1408"
 HEADER="SYSTEM:"
