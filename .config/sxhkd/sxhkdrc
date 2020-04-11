@@ -207,3 +207,8 @@ super +{_,shift} + r
 super + button{1-3}
 	bspc pointer -g {move,resize_side,resize_corner}
 
+# hide/unhide windows
+super + v
+	bspc node -g hidden
+super + shift + v
+	bspc node {,$(bspc query -N -n .hidden | tail -n1)} -g hidden=off
