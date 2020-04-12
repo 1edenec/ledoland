@@ -1,0 +1,17 @@
+#!/bin/bash
+
+daemon="tor"
+status=$( systemctl status $daemon | grep -i run 2>/dev/null || echo '' | awk '{print $1}' | sed 's/://' )
+
+toggler(){
+	(lxpolkit &) && sleep 1
+	systemctl "$operation" "$daemon"
+	killall lxpolkit
+}
+
+case $status in
+	Active) operation="stop" 	&& toggler ;;
+	*)		operation="start"   && toggler ;;
+esac
+
+
