@@ -47,7 +47,7 @@ super + F{1-9,10,11,12}
 	 bspc wm -r; notify-send "System" "BSPWM was restarting...",  \
 	displayselect, \
 	dmenupoweroff, \
-	$netrefresh, \
+	tortgl, \
 	torwrap, \
 	td-toggle, \
 	mailsync, \
