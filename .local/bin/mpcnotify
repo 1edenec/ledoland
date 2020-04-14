@@ -1,0 +1,41 @@
+#!/bin/bash
+# script to show notify when mpc song changed
+# arguments: next, prev, toggle
+
+did="-r 1283"
+HEADER="Playing:"
+THEME="/usr/share/icons/oomox-darkleden/48x48/"
+icon="apps/audio-player.svg"
+iconmuted="status/state_paused.svg"
+
+status=$(mpc status | awk NR\ ==\ 2\{print\ \$1\} | sed -e 's/\[//' -e 's/\]//')
+
+nextsong(){
+if [ $status = "paused" ]
+then
+	HEADER="Paused: " ; icon=$iconmuted
+else
+	mpc $com >> /dev/null
+fi
+}
+
+toggler(){
+if [ $status != "paused" ]
+then
+	HEADER="Paused: " ; icon=$iconmuted
+fi
+mpc toggle >> /dev/null
+}
+
+case $1 in
+	next) com="next" && nextsong ;;
+	prev) com="prev" && nextsong ;;
+	toggle) toggler ;;
+	*) ;;
+esac
+
+artist=$(mpc current -f %artist% | cut -c1-17)
+title=$(mpc current -f %title%  | cut -c1-20)
+
+dunstify $did -i "$THEME""$icon" "$HEADER" "$artist\...\n$title\..."
+
