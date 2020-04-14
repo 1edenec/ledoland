@@ -57,10 +57,12 @@ super + F{1-9,10,11,12}
 	$TERMINAL -n Nmtui -e nmtui}
 
 # screenshots
-{_,shift,alt} + Print
-	flameshot {gui, \
-		   full -c -p $HOME/, \
-		   full -c -d 3000 -p $HOME/}
+{_,alt} + Print
+	{maimpick, \
+	PICNAME=~/Pictures/Screen/"$(date '+%y%m%d-%H%M-%S').png" ; \
+	maim -d 3 $PICNAME ; \
+	sxiv $PICNAME}
+
 super + Print
 	dmenurecord
 super + delete
@@ -68,11 +70,13 @@ super + delete
 
 # mpc
 super + p
-	mpc toggle
+	mpcnotify toggle
 super + {plus,minus}
 	amixer sset Master {5%+,5%-}
-super + {comma,period,bracketleft,bracketright}
-	mpc {prev,next,seek -20,seek +20}
+super + {bracketleft,bracketright}
+	{seek -20,seek +20}
+super + {comma,period}
+	mpcnotify {next,prev}
 
 # dmenuscripts
 super + grave
@@ -212,3 +216,5 @@ super + v
 	bspc node -g hidden
 super + shift + v
 	bspc node {,$(bspc query -N -n .hidden | tail -n1)} -g hidden=off
+
+
