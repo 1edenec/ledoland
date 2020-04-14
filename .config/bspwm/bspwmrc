@@ -41,7 +41,7 @@ bspc config pointer_modifier 	  control
 
 ### Apps and windows
 ###############################################
-bscp rule -a polybar manage=off
+#bscp rule -a polybar manage=off
 
 # Rules
 bspc rule -a scratch_vifm sticky=on state=floating rectangle=1400x800+0+0 center on
@@ -69,5 +69,6 @@ bspc rule -a SimpleScreenRecorder state=floating
 bspc rule -a Sxiv state=floating
 bspc rule -a St:Nmtui rectangle=700x470+0+0 state=floating center=on
 bspc rule -a mpv state=floating sticky=on rectangle="$newwidth"x"$newheight"+"$hor"+"$vert"
+bspc rule -a Qalculate-gtk state=floating center=on rectangle=700x470+0+0
 
 
