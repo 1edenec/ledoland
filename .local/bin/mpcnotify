@@ -11,11 +11,22 @@ icondead="status/computer-fail.svg"
 
 status=$(mpc status | awk NR\ ==\ 2\{print\ \$1\} | sed -e 's/\[//' -e 's/\]//')
 
+# cut the text if it more than 23  symbols in length
+cutter(){
+	text=$(mpc current -f %$1%)
+	qty=$( echo $text | wc -c)
+	if	(( $qty > 23 ))
+		then
+			text=$( echo $text | cut -c1-20)"..."
+	fi
+	echo $text
+}
+
 # notificaion when mpd is running
 mpdnormal(){
-artist=$(mpc current -f %artist% | cut -c1-17)
-title=$(mpc current -f %title%  | cut -c1-20)
-dunstify $did -i "$THEME""$icon" "$HEADER" "$artist\...\n$title\..."
+artist=$(cutter "artist")
+title=$(cutter  "title")
+dunstify $did -i "$THEME""$icon" "$HEADER" "$artist\n$title"
 }
 
 # notificaion when mpd is NOT running
@@ -54,6 +65,7 @@ case $status in
 esac
 }
 
+# main body
 case $1 in
 	next)
 		com="next" && nextsong ;;
@@ -63,6 +75,4 @@ case $1 in
 		toggler ;;
 	*) ;;
 esac
-
-
 
