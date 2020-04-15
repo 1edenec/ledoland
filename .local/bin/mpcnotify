@@ -7,35 +7,62 @@ HEADER="Playing:"
 THEME="/usr/share/icons/oomox-darkleden/48x48/"
 icon="apps/audio-player.svg"
 iconmuted="status/state_paused.svg"
+icondead="status/computer-fail.svg"
 
 status=$(mpc status | awk NR\ ==\ 2\{print\ \$1\} | sed -e 's/\[//' -e 's/\]//')
 
-nextsong(){
-if [ $status = "paused" ]
-then
-	HEADER="Paused: " ; icon=$iconmuted
-else
-	mpc $com >> /dev/null
-fi
+# notificaion when mpd is running
+mpdnormal(){
+artist=$(mpc current -f %artist% | cut -c1-17)
+title=$(mpc current -f %title%  | cut -c1-20)
+dunstify $did -i "$THEME""$icon" "$HEADER" "$artist\...\n$title\..."
 }
 
+# notificaion when mpd is NOT running
+mpddead(){
+dunstify $did -i "$THEME""$icondead" "Error:" "mpd is dead"
+}
+
+# switch to next song or not, if mpd is not running
+nextsong(){
+case $status in
+	paused)
+		HEADER="Paused: "
+		icon=$iconmuted
+		mpdnormal ;;
+	playing)
+		mpc $com
+		mpdnormal ;;
+	*)
+		mpddead ;;
+esac
+}
+
+# pause/play, if mpd is running.
 toggler(){
-if [ $status != "paused" ]
-then
-	HEADER="Paused: " ; icon=$iconmuted
-fi
-mpc toggle >> /dev/null
+case $status in
+	paused)
+		mpc toggle >> /dev/null
+		mpdnormal ;;
+	playing)
+		HEADER="Paused: "
+		icon=$iconmuted
+		mpc toggle >> /dev/null
+		mpdnormal ;;
+	*)
+		mpddead ;;
+esac
 }
 
 case $1 in
-	next) com="next" && nextsong ;;
-	prev) com="prev" && nextsong ;;
-	toggle) toggler ;;
+	next)
+		com="next" && nextsong ;;
+	prev)
+		com="prev" && nextsong ;;
+	toggle)
+		toggler ;;
 	*) ;;
 esac
 
-artist=$(mpc current -f %artist% | cut -c1-17)
-title=$(mpc current -f %title%  | cut -c1-20)
 
-dunstify $did -i "$THEME""$icon" "$HEADER" "$artist\...\n$title\..."
 
