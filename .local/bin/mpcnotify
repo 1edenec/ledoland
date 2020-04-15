@@ -29,13 +29,13 @@ dunstify $did -i "$THEME""$icon" "$HEADER" "$MESSAGE"
 
 # switch to next song or not, if mpd is not running
 case "$1"_"$status" in
-	next_playing) 	mpc next && switcher;;
+	next_playing) 	mpc next   ; switcher;;
 	next_paused) 	icon=$iconmuted ; HEADER="Paused:" ; switcher;;
-	prev_playing) 	mpc prev && switcher;;
+	prev_playing) 	mpc prev   ; switcher;;
 	prev_paused) 	icon=$iconmuted ; HEADER="Paused:" ; switcher;;
 	toggle_playing) mpc toggle ; icon=$iconmuted ; HEADER="Paused:" switcher;;
 	toggle_paused) 	mpc toggle ; switcher;;
-	*)				icon="$icondead" HEADER="Error:" ; switcher "dead";;
+	*)		icon="$icondead" HEADER="Error:" ; switcher "dead";;
 esac
 
 
