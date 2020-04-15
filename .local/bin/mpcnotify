@@ -15,64 +15,27 @@ status=$(mpc status | awk NR\ ==\ 2\{print\ \$1\} | sed -e 's/\[//' -e 's/\]//')
 cutter(){
 	text=$(mpc current -f %$1%)
 	qty=$( echo $text | wc -c)
-	if	(( $qty > 23 ))
-		then
-			text=$( echo $text | cut -c1-20)"..."
-	fi
+	(( $qty > 23 )) && text=$( echo $text | cut -c1-20)"..."
 	echo $text
 }
 
 # notificaion when mpd is running
-mpdnormal(){
+switcher(){
 artist=$(cutter "artist")
 title=$(cutter  "title")
-dunstify $did -i "$THEME""$icon" "$HEADER" "$artist\n$title"
-}
-
-# notificaion when mpd is NOT running
-mpddead(){
-dunstify $did -i "$THEME""$icondead" "Error:" "mpd is dead"
+[ "$1" = "dead" ] && MESSAGE="mpd is dead" || MESSAGE="$artist\n$title"
+dunstify $did -i "$THEME""$icon" "$HEADER" "$MESSAGE"
 }
 
 # switch to next song or not, if mpd is not running
-nextsong(){
-case $status in
-	paused)
-		HEADER="Paused: "
-		icon=$iconmuted
-		mpdnormal ;;
-	playing)
-		mpc $com
-		mpdnormal ;;
-	*)
-		mpddead ;;
+case "$1"_"$status" in
+	next_playing) 	mpc next && switcher;;
+	next_paused) 	icon=$iconmuted ; HEADER="Paused:" ; switcher;;
+	prev_playing) 	mpc prev && switcher;;
+	prev_paused) 	icon=$iconmuted ; HEADER="Paused:" ; switcher;;
+	toggle_playing) mpc toggle ; icon=$iconmuted ; HEADER="Paused:" switcher;;
+	toggle_paused) 	mpc toggle ; switcher;;
+	*)				icon="$icondead" HEADER="Error:" ; switcher "dead";;
 esac
-}
 
-# pause/play, if mpd is running.
-toggler(){
-case $status in
-	paused)
-		mpc toggle >> /dev/null
-		mpdnormal ;;
-	playing)
-		HEADER="Paused: "
-		icon=$iconmuted
-		mpc toggle >> /dev/null
-		mpdnormal ;;
-	*)
-		mpddead ;;
-esac
-}
-
-# main body
-case $1 in
-	next)
-		com="next" && nextsong ;;
-	prev)
-		com="prev" && nextsong ;;
-	toggle)
-		toggler ;;
-	*) ;;
-esac
 
