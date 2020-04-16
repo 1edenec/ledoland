@@ -1,4 +1,4 @@
 # ledoland
 just my setup from home PC
-try again
-ili ne try
+
+nothing good, just badcode.
