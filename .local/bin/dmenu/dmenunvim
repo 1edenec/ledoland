@@ -1,0 +1,8 @@
+#!/bin/bash
+# script to handle with scripts / texts inside folder
+# sed 's/\/.*\///' remove path
+# -type f - showing files only
+# sort -f sorting files alphabetically
+DIR="$HOME/.local/bin/"
+FILE=$(find $DIR -type f | sed 's/\/.*\///' | sort -f |  dmenu -l 15 -p "Searching: " | xargs which)
+[ "$FILE" != "" ] && st -e nvim "$FILE"
