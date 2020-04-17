@@ -83,8 +83,8 @@ super + grave
 	dmenuunicode
 super + Insert
 	showclip
-super + {_,shift} + d
-	{dmenu_run, rofi -show drun}
+super + { ,shift} + d
+	{dmenu_run,	dmenunvim}
 super + x
 	dmenugames
 #
