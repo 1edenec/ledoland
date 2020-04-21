@@ -2,7 +2,6 @@
 # simple brightness control script
 # with notifications
 #
-#
 pid="1283"
 iconpath="/usr/share/icons/Papirus/48x48/status/"
 br_full="notification-display-brightness-full.svg"
@@ -29,7 +28,6 @@ geticon(){
 }
 
 up(){
-
     xbacklight -inc $incr
     text=$(xbacklight -get)
     if (( $text == 100))
@@ -52,5 +50,3 @@ case  $1 in
 esac
 
 dunstify -i $iconpath$icon -r $pid $nothead $text
-
-
