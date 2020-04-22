@@ -1,0 +1,73 @@
+#!/bin/bash
+# simple script to toggle bluetooth power
+# if bluetooth switched on, than switch off it
+# if bt switched off, use btmenu
+dam="bluetooth"
+BLUE_COMMAND="bluetoothctl power"
+BLUE_STAT=""
+
+DAEMON_STAT=$( (systemctl status $dam | grep -i Active || echo "") | awk '{print $2}' | sed 's/://')
+[ "$DAEMON_STAT" == "active" ] && BLUE_STAT=$(bluetoothctl show | awk NR\ ==\ 5\{print\ \$2\})
+
+PROMPT="btmenu"
+DMENU="dmenu -i -p"
+did="-r 1408" 			#id to dunstify
+
+daemonswitcher(){
+	lxpolkit &
+	sleep 1
+	systemctl "$1" "$dam"
+	killall -q lxpolkit
+}
+
+turnon(){ \
+	$BLUE_COMMAND "on"
+	dunstify $did $PROMPT "Bluetooth is ON"
+	# espeak-ng "bluetooth switched on"
+}
+
+conpair(){ \
+	bluemenu
+}
+
+turnoff(){ \
+	$BLUE_COMMAND "off"
+	dunstify $did $PROMPT "Bluetooth is OFF"
+	xset +dpms
+	xset s on
+}
+
+asktoof(){ \
+	choice=$(echo -e "Yes\nNo\nKillDaemon" | $DMENU  "Turn off bluetooth?")
+    case "$choice" in
+      Yes)        turnoff ;;
+	    No)         dunstify $did $PROMPT "Bluetooth is still ON" && exit ;;
+	    KillDaemon)	daemonswitcher "stop" && dunstify $did $PROMPT "Bluetooth is dead";;
+	    *)          dunstify $did $PROMPT "Bluetooth is still ON" && exit ;;
+esac
+}
+
+asktoon(){ \
+	choice=$(echo -e "Turn on\nConnect Paired\nKillDaemon" | $DMENU  "$PROMPT")
+	case "$choice" in
+  		"Turn on") turnon ;;
+  		"Connect Paired") conpair ;;
+		  KillDaemon)	daemonswitcher "stop" && dunstify $did $PROMPT "Bluetooth is dead";;
+	esac
+}
+
+asktoon_daemon(){
+choice=$(echo -e "Yes On\nYes\nNo" | $DMENU  "Daemon is dead. start?")
+	case "$choice" in
+		"Yes On") 	daemonswitcher start  && turnon ;;
+  	     Yes) 	daemonswitcher start && asktoon;;
+  		     *) 	exit ;;
+	esac
+}
+
+FULLSTAT="$DAEMON_STAT"_"$BLUE_STAT"
+case "$FULLSTAT" in
+	active_yes) asktoof;;
+	 active_no) asktoon;;
+	         *) asktoon_daemon;;
+esac
