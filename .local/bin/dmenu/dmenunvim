@@ -3,6 +3,6 @@
 # sed 's/\/.*\///' remove path
 # -type f - showing files only
 # sort -f sorting files alphabetically
+# "xrags -r" run command only if arg is not empty
 DIR="$HOME/.local/bin/"
-FILE=$(find $DIR -type f | sed 's/\/.*\///' | sort -f |  dmenu -l 15 -p "Searching: " | xargs which)
-[ "$FILE" != "" ] && st -e nvim "$FILE"
+find $DIR -type f | sed 's/\/.*\///' | sort -f |  dmenu -l 10 -p "Searching: " | xargs which | xargs -r st -e nvim
