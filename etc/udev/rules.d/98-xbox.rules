@@ -1,19 +1,19 @@
 ACTION=="add" \
 , KERNEL=="js1" \
 , ATTRS{name}=="Microsoft X-Box One S pad" \
-, RUN+="/bin/bash /etc/udev/scripts/joyadd.sh"
+, RUN+="/etc/udev/scripts/xbox add"
 
 ACTION=="remove" \
 , KERNEL=="js1" \
 , ATTRS{name}=="Microsoft X-Box One S pad" \
-, RUN+="/bin/bash /etc/udev/scripts/joyrem.sh"
+, RUN+="/etc/udev/scripts/xbox remove"
 
 # Wireless gamepad
 ACTION=="add" \
 , KERNEL=="input[0-9]*" \
 , ATTRS{name}=="Xbox Wireless Controller" \
-, RUN+="/bin/bash /etc/udev/scripts/joyadd.sh (BT)"
+, RUN+="/etc/udev/scripts/xbox add (BT)"
 
 ACTION=="remove" \
 , ATTRS{name}=="Xbox Wireless Controller" \
-, RUN+="/bin/bash /etc/udev/scripts/joyrem.sh (BT)"
+, RUN+="/etc/udev/scripts/xbox remove (BT)"
