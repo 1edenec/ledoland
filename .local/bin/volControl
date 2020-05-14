@@ -1,87 +1,81 @@
 #!/bin/bash
 # simple volume notification script
-#
+# I  put iconpath="/usr/share/icons/oomox-darkleden/48x48/status/"
+#  to the dunst config
 pid="1283"
-iconpath="/usr/share/icons/Papirus/48x48/status/"
-vol_high="notification-audio-volume-high.svg"
-vol_med="notification-audio-volume-medium.svg"
-vol_low="notification-audio-volume-low.svg"
-muted="notification-audio-volume-muted.svg"
+vol_high="notification-audio-volume-high"
+vol_med="notification-audio-volume-medium"
+vol_low="notification-audio-volume-low"
+muted="notification-audio-volume-muted"
 nothead="Volume:"
 incr=10
+icon=$muted
+text="muted"
 
 geticon(){
 if (( $vol > 66 ))
-    then
-        icon=$vol_high
-        	else
-        	    if (( $vol < 33  ))
-            then icon=$vol_low
-    	    else
-    		icon=$vol_med
-    	    fi
+then
+    icon=$vol_high
+elif
+    (( $vol < 33  ))
+then
+    icon=$vol_low
+else
+    icon=$vol_med
 fi
 }
 
 get_status(){
-	STAT=$(pulsemixer -l | grep "Sink:" | awk '{print $10}' | sed  's/,//')
+	STAT=$( pulsemixer -l | awk '$1 == "Sink:" {gsub (",","",$10); print $10}')
 }
 
 mute(){
 if [ $STAT == 0 ] ;
-    then
-        icon=$muted
-        text="muted"
-        pulsemixer --mute
-    else
-       vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
-       geticon
-       text="$vol"%
-       pulsemixer --unmute
+then
+    pulsemixer --mute
+else
+   vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
+   geticon
+   text="$vol"%
+   pulsemixer --unmute
 fi
 }
 
 up(){
-if [ $STAT == 0 ] ;
+if [ $STAT == 0 ]
+then
+    vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
+    ost=$((100 - $vol))
+    if (($ost < $incr ))
     then
-        vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
-        ost=$((100 - $vol))
-            if (($ost < $incr )) ;
-                then
-    	        geticon
-    	        pulsemixer --set-volume 100
-                    vol=100
-    	    else
-    	        pulsemixer --change-volume +$incr
-                    vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
-    		geticon
-    	fi
-	    text="$vol"%
+        geticon
+        pulsemixer --set-volume 100
+        vol=100
     else
-        icon=$muted
-        text="muted"
+    	pulsemixer --change-volume +$incr
+        vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
+    	geticon
+    fi
+        text="$vol"%
 fi
 }
 
 down(){
-if [ $STAT == 0 ] ;
+if [ $STAT == 0 ]
+then
+    vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
+    if (($vol < $incr )) ;
     then
-        vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
-            if (($vol < $incr )) ;
-                then
-      	            geticon
-		    pulsemixer --set-volume 0
-	            vol=0
-		else
-		    pulsemixer --change-volume -$incr
-	            vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
-		    geticon
-	    fi
-    	text="$vol"%
+        geticon
+	    pulsemixer --set-volume 0
+        vol=0
     else
-	icon=$muted
-	text="muted"
-    fi
+        pulsemixer --change-volume -$incr
+        vol=$(pulsemixer --get-volume --id sink-0 | awk '{print $1}')
+		geticon
+	fi
+    text="$vol"%
+fi
 }
 
 get_status
@@ -92,5 +86,5 @@ case  $1 in
 	down) down;;
 esac
 
-dunstify -i $iconpath$icon  -r $pid $nothead $text
+dunstify -i $icon -r $pid $nothead $text
 
