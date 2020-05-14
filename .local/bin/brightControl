@@ -1,52 +1,46 @@
 #!/bin/bash
 # simple brightness control script
 # with notifications
-#
+# I put iconpath="/usr/share/icons/oomox-darkleden/48x48/status/"
+# to the dunst config file
 pid="1283"
-iconpath="/usr/share/icons/Papirus/48x48/status/"
-br_full="notification-display-brightness-full.svg"
-br_high="notification-display-brightness-high.svg"
-br_med="notification-display-brightness-medium.svg"
-br_low="notification-display-brightness-low.svg"
+br_full="notification-display-brightness-full"
+br_high="notification-display-brightness-high"
+br_med="notification-display-brightness-medium"
+br_low="notification-display-brightness-low"
 nothead="Brightness:"
 incr=10
+icon=$br_full
+text="max"
 
 geticon(){
-    if (( $text == 100))
-	then icon=$br_full
+	if (( $1 > 66 ))
+	then
+		icon=$br_high
+	elif (( $1 > 33 ))
+	then
+		icon=$br_med
 	else
-	    if (( $text > 66 ))
-		then icon=$br_high
-		else
-		    if (( $text > 33))
-			then icon=$br_med
-			else icon=$br_low
-		    fi
-	    fi
-    fi
-    text="$text"%
+		icon=$br_low
+	fi
+	text="$1"%
 }
 
-up(){
-    xbacklight -inc $incr
-    text=$(xbacklight -get)
-    if (( $text == 100))
-	then text="max"
-	icon=$br_full
-	else
-	geticon
-    fi
+setter(){
+	xbacklight $1 $incr
+	br_volume=$(xbacklight -get)
+	(( $br_volume != 100 )) && geticon $br_volume
+	dunstify -i $icon -r $pid $nothead $text
 }
 
-down(){
-	xbacklight -dec $incr
-	text=$(xbacklight -get)
-	geticon
-    }
+toggle(){
+	sleep 1
+	xset dpms force off
+}
 
-case  $1 in
-	up) up ;;
-	down) down;;
+case $1 in
+	up)	setter "-inc" ;;
+	down)	setter "-dec ";;
+	toggle) toggle ;;
+	*) exit ;;
 esac
-
-dunstify -i $iconpath$icon -r $pid $nothead $text
