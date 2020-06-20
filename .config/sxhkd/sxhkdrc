@@ -1,22 +1,26 @@
 # terminal emulator
 super + Return
 	$TERMINAL
+super + space
+	rofi -show drun
+super + shift + Tab
+	rofi -show window
 
 #dropdown terminal
 super + slash
-	scratch scratch_tmux dropdowntmux
+	scratch scratch_kitty
 
 super + Escape
 	$TERMINAL -e nvim ~/.config/sxhkd/sxhkdrc
 
 # Programms
 super + shift + y
-	dunstify "System" "mpv is on his way...)" && \
+	( dunstify -i xt7-player-mpv "Player:" "mpv is on his way..." ) && \
 	mpv $(xclip -o -selection primary)
 
 super + {w,m,b}
 	{firefox, \
-	$TERMINAL -e ncmpcpp, \
+	scratch "scratch_ncmpcpp" "ncmpcpp", \
 	dmenubluetogle}
 
 super + {_,shift} + l
@@ -47,12 +51,12 @@ super + F{1-9,10,11,12}
 	dmenupower, \
 	tortgl, \
 	dmenuqbnox, \
-	td-toggle, \
+	dmenuiwd -d, \
 	mailsync, \
 	dmenumount, \
 	dmenuumount, \
-	ducksearch, \
-	$TERMINAL -n Nmtui -e nmtui}
+	bar-toggle show, \
+	bar-toggle hide}
 
 # screenshots
 {_,alt} + Print
@@ -63,7 +67,7 @@ super + F{1-9,10,11,12}
 
 super + Print
 	dmenurecord
-super + delete
+super + Delete
 	dmenurecord kill
 
 # mpc
@@ -95,6 +99,10 @@ XF86MonBrightness{Down,Up}
 
 XF86Audio{Mute,LowerVolume,RaiseVolume}
 	volControl {mute,down,up}
+
+# volume with mouse
+alt + button{2,4,5}
+	volControl {mute,up,down}
 
 XF86TouchpadToggle
 	touchpadtoggle
@@ -215,6 +223,24 @@ super + v
 	bspc node -g hidden
 super + shift + v
 	bspc node {,$(bspc query -N -n .hidden | tail -n1)} -g hidden=off
+
+
+# for test reasons special
+super + u
+	dunstify -i system "supertest pressed" && ~/supertest toggle &&
+
+# Super_L
+# 	bar-toggle hide
+# @Super_L
+# 	bar-toggle show
+
+button9
+	volControl up
+	#dunstify -i clock "System time is" `date +%H:%M`
+
+button8
+	volControl down
+	#rofipower
 
 
 
