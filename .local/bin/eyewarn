@@ -7,8 +7,14 @@ COMM="dunstify -i $icon -u critical"
 HEADER='Take a break'
 MESSAGE='Drink sneakers'
 
+# make sound=false if you dont need a sound
+sound=true
+
 message(){
-    $COMM "$HEADER" "$MESSAGE"
+	# use dunstify to make message
+	$COMM "$HEADER" "$MESSAGE"
+	# soundbeep
+	$sound && echo -en "\007"
 }
 
 # find active window and monitor dimensions and monitor stat (according DPMS)
@@ -17,58 +23,66 @@ message(){
 # If DESKTOP and WINDOW dimensions are equal, return "dont"
 # If DESKTOP and WINDOW dimensions are NOT equal, return "show"
 show(){
-    DESKTOP="$(xdotool getdisplaygeometry | sed 's/\ /x/')"
-    WINDOW="$(xdotool getwindowfocus getwindowgeometry | awk '$1 == "Geometry:" {print $2}')"
-    WINNAME="$(xdotool getactivewindow getwindowname 2>/dev/null)"
-    STAT="$(xset q | awk '$1 == "Monitor" {print $NF}')"
-#echo "NAME=$WINNAME win=$WINDOW  $STAT top=$DESKTOP"  # debug
+	DESKTOP="$(xdotool getdisplaygeometry | sed 's/\ /x/')"
+	WINDOW="$(xdotool getwindowfocus getwindowgeometry | awk '$1 == "Geometry:" {print $2}')"
+	WINNAME="$(xdotool getactivewindow getwindowname 2>/dev/null)"
+	STAT="$(xset q | awk '$1 == "Monitor" {print $NF}')"
+	#echo "NAME=$WINNAME win=$WINDOW  $STAT top=$DESKTOP"  # debug
 
-    if  [ "$STAT" == "On" ]
-    then
-        if  [ "$WINNAME" == "" ]
-        then
-            echo "show"
-        else
-            [ "$DESKTOP" != "$WINDOW" ] &&  echo "show" || echo "dont"
-        fi
-    else
-        echo "off"
-    fi
+	if  [ "$STAT" == "On" ]
+	then
+		if  [ "$WINNAME" == "" ]
+		then
+			echo "show"
+		else
+			[ "$DESKTOP" != "$WINDOW" ] &&  echo "show" || echo "dont"
+		fi
+	else
+		echo "off"
+	fi
+}
+
+logger(){
+	show
+	echo -e `date` "\nDestop size=$DESKTOP \nWindow Size=$WINDOW \nWindow Name=$WINNAME \nStat=$STAT \nMessage=$1" >> ~/.local/share/eyewarn.log
 }
 
 # When Display off, message will not be shown
 displayoff(){
-    while [ "$(show)" == "off" ]
-    do
-        sleep 60
-    done
+	while [ "$(show)" == "off" ]
+	do
+		sleep 60
+	done
+	#logger "dislpayoff"
 }
 
 # When application fullscreened, message will not be shown
 # Hovever, when screen will be returned to normal, message will be shown immediately
 fullscreen(){
-    while [ "$(show)" != "show" ]
-    do
-        sleep 60
-    done
-    message
+	while [ "$(show)" != "show" ]
+	do
+		sleep 60
+	done
+	message
+	#logger "fullscreen"
 }
 
 # Message will be shown ecery 45 minutes
 normal(){
-    sleep 45m
-    if [ "$(show)" == "show" ]
-    then
-        message
-    fi
+	sleep 45m
+	if [ "$(show)" == "show" ]
+	then
+		message
+		#logger "normal"
+	fi
 }
 
 while :
 do
-    case "$(show)" in
-        "show") normal ;;
-        "dont") fullscreen ;;
-        "off") displayoff ;;
-        *) echo -e `date` "\nerror: $(show)" >> ~/.local/share/eyewarn.log;;
-    esac
+	case "$(show)" in
+		"show") normal ;;
+		"dont") fullscreen ;;
+		"off") displayoff ;;
+		*) echo -e `date` "\nerror: $(show)" >> ~/.local/share/eyewarn.log;;
+	esac
 done
