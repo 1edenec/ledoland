@@ -1,74 +1,70 @@
 # terminal emulator
 super + Return
 	$TERMINAL
+
+super + shift + Return
+	~/.local/bin/eDEX-UI.Linux.x86_64.AppImage &
+
 super + space
-	rofi -show drun
+	rofi -modi drun -show drun
 super + shift + Tab
-	rofi -show window
+	rofi -modi run,window -show window -window-thumbnail
 
 #dropdown terminal
-super + slash
-	scratch scratch_kitty
+super + {_,shift} + slash
+	{scratch scratch_term,  \
+	termdraw}
 
 super + Escape
-	$TERMINAL -e nvim ~/.config/sxhkd/sxhkdrc
+	$TERMINAL -e  nvim ~/.config/sxhkd/sxhkdrc
 
 # Programms
-super + shift + y
-	( dunstify -i xt7-player-mpv "Player:" "mpv is on his way..." ) && \
-	mpv $(xclip -o -selection primary)
+#super + shift + y
+#	( dunstify -i xt7-player-mpv "Player:" "mpv is on his way..." ) && \
+#	mpv $(xclip -o -selection primary)
 
-super + {w,m,b}
-	{firefox, \
+super + {w,m,b,v}
+	{$BROWSER, \
 	scratch "scratch_ncmpcpp" "ncmpcpp", \
-	dmenubluetogle}
-
-super + {_,shift} + l
-	{i3lock-fancy, \
-	brightControl toggle}
+	scratch "scratch_btm" "btm", \
+	rofivirts}
 
 #calculator
-super + {_,shift} + a
-	{scratch scratch_bc dropdowncalc, \
+super + {shift,_} + a
+	{scratch "scratch_pulse" "pulsemixer", \
 	scratch_gui qalculate-gtk}
 
-
 super + e
-	scratch "scratch_vifm" "vifmrun"
+	pcmanstart
+
 super + shift + e
-	scratch "scratch_pulse" "pulsemixer"
+	$TERMINAL -e nnn -a
 
-super + s
-	$TERMINAL -e zsh -c 'vifm "$(find . -type d | fzf)";'
 
-super + shift + g
-	gimp
+#lock screen
+super + l
+	i3lock-fancy
 
 super + F{1-9,10,11,12}
-	{ducksearch, \
-	 bspc wm -r; notify-send "System" "BSPWM was restarted...",  \
+	{rofisearch, \
+	bspc wm -r && dunstify "BSPWM" "I was restarted..." -i gtk-dialog-info,  \
 	displayselect, \
-	dmenupower, \
+	rofipower, \
 	tortgl, \
 	dmenuqbnox, \
 	dmenuiwd -d, \
-	mailsync, \
-	dmenumount, \
-	dmenuumount, \
+	dmenubluetogle, \
+	rofimount, \
+	rofiumount, \
 	bar-toggle show, \
 	bar-toggle hide}
 
 # screenshots
 {_,alt} + Print
-	{maimpick, \
+	{rofiscreen, \
 	PICNAME=~/Pictures/Screen/"$(date '+%y%m%d-%H%M-%S').png" ; \
 	maim -d 3 $PICNAME ; \
 	sxiv $PICNAME}
-
-super + Print
-	dmenurecord
-super + Delete
-	dmenurecord kill
 
 # mpc
 super + p
@@ -77,19 +73,17 @@ super + {plus,minus}
 	amixer sset Master {5%+,5%-}
 super + {bracketleft,bracketright}
 	{seek -20,seek +20}
-super + {comma,period}
+super + {period,comma}
 	mpcnotify {next,prev}
 
 # dmenuscripts
 super + grave
 	dmenuunicode
 super + Insert
-	dmenugreenclip
-#showclip
+	showclip
+
 super + { ,shift} + d
-	{dmenu_run,	dmenunvim}
-super + x
-	dmenugames
+	{dmenu_run,	rofinvim}
 #
 # fn keys
 #
@@ -130,23 +124,11 @@ super + g
 # state/flags
 #
 
-# set the window state
-super + shift + t
-	[ -z "$(bspc query -N -n focused.pseudo_tiled)" ] && \
-	(bspc node focused -t pseudo_tiled ; dunstify -r 1204 "BSPWM" "Pseudo tiled") || \
-    (bspc node focused -t tiled ; dunstify -r 1204 "BSPWM" "Tiled")
-
-# toggle fullscreen
 super + f
-    [ -z "$(bspc query -N -n focused.fullscreen)" ] && \
-	(bspc node focused -t fullscreen ; dunstify -r 1204 "BSPWM" "Fullscreened") || \
-    (bspc node focused -t tiled ; dunstify -r 1204 "BSPWM" "Tiled")
+	bspwm_winstate_notes
 
-# Toggle floating
-super + t
-	[ -z "$(bspc query -N -n focused.floating)" ] && \
-	(bspc node focused -t floating ; dunstify -r 1204 "BSPWM" "Floated") || \
-    (bspc node focused -t tiled ; dunstify -r 1204 "BSPWM" "Tiled")
+super + shift + f
+	bspwm_winstate_notes astern
 
 # set the node flags
 alt + {m,l,s,p}
@@ -162,6 +144,7 @@ super + {_,shift + }{Left,Down,Up,Right}
 # focus the next/previous node in the current desktop
 super + {_,shift + }c
 	bspc node -f {next,prev}.local
+
 
 # focus or send to the given desktop
 super + {_,shift + }{1-9,0}
@@ -194,13 +177,10 @@ super + ctrl + space
 # move/resize
 #
 
-# expand a window by moving one of its side outward
+#resize windows with script
 super + alt + {h,j,k,l}
-	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+	resize {west,north,south,east}
 
-# contract a window by moving one of its side inward
-super + alt + shift + {h,j,k,l}
-	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 
 # move a floating window
 super + ctrl + {Left,Down,Up,Right}
@@ -214,34 +194,14 @@ super + shift + {b,n}
 super +{_,shift} + r
 	bspc node @/ -R {90,270}
 
-# mouse actions
-super + button{1-3}
-	bspc pointer -g {move,resize_side,resize_corner}
-
 # hide/unhide windows
-super + v
+super + h
 	bspc node -g hidden
-super + shift + v
+super + shift + h
 	bspc node {,$(bspc query -N -n .hidden | tail -n1)} -g hidden=off
-
-
-# for test reasons special
-super + u
-	dunstify -i system "supertest pressed" && ~/supertest toggle &&
-
-# Super_L
-# 	bar-toggle hide
-# @Super_L
-# 	bar-toggle show
 
 button9
 	volControl up
-	#dunstify -i clock "System time is" `date +%H:%M`
 
 button8
 	volControl down
-	#rofipower
-
-
-
-
