@@ -3,18 +3,12 @@ Xft.dpi:        129
 Xft.antialias:  true
 Xft.hinting:    true
 Xft.rgba:       rgb
-Xft.autohint:   false
+Xft.autohint:   true
 Xft.hintstyle:  hintslight
 Xft.lcdfilter:  lcddefault
-Xcursor.theme:  volantes_cursors
-Xcursor.size :  48
+Xcursor.theme:  volantes_light_cursors
+Xcursor.size :  24
 
-!*.font:	    Liberation Mono:pixelsize=12:antialias=true:autohint=true;
-!*.font:	    Liberation Mono:pixelsize=12:antialias=true:autohint=true;
-!*.font:	    Hack Nerd Font Mono:size=9
-!*.font:	    Fira Sans,Fira Sans Medium:style=Medium,Regular:size=9
-!*.font:	    Liberation Mono:pixelsize=12:antialias=true:autohint=true;
 *.alpha:        0.97
-*.font:         monospace:size=10
+
 dmenu.font:     :size=15
-rofi.font:		Liberation Mono 16
