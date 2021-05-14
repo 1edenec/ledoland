@@ -1,0 +1,58 @@
+#!/bin/bash
+
+SCREENSHOT_DIR="${HOME}/Pictures/Screen"
+
+[ ! -d ${SCREENSHOT_DIR} ] && mkdir ${SCREENSHOT_DIR} -p
+
+BASE_NAME=$(date '+%d_%m_%y_%H%M_%S')
+
+CHOICES="1)	Fullscreen
+2)	Fullscreen (delayed)
+3)	Select
+4)	Window
+5)	Fullscreen (copy)
+6)	Select (copy)
+7)	Window (copy)"
+
+#LAUNCHER='rofi -dmenu -width 400 -l 7 -i -p Screenshot: -theme-str \'#listview { scrollbar:false; }\''
+
+cmd=$(printf "%s" "$CHOICES" | rofi -dmenu -width 350 -l 7 -i -p Screenshot: -theme-str '#listview { scrollbar:false; }')
+
+message(){
+[ "$1" != "" ]  \
+	&& notify-send "Screenshot saved ${SCREENSHOT_DIR}/${1}-${BASE_NAME}.png" -i ${SCREENSHOT_DIR}/${1}-${BASE_NAME}.png \
+	|| notify-send "Screenshot saved in buffer"
+}
+
+case $cmd in
+	1*)
+		maim -d 0.5 ${SCREENSHOT_DIR}/pic-full-${BASE_NAME}.png
+		message "pic-full"
+		;;
+	2*)
+		maim -d 10 ${SCREENSHOT_DIR}/pic-full-${BASE_NAME}.png
+		message "pic-full"
+		;;
+	3*)
+		maim -s --bordersize=2 ${SCREENSHOT_DIR}/pic-selected-${BASE_NAME}.png
+		message "pic-selected"
+		;;
+	4*)
+		maim -d 0.5 -i $(xdotool getactivewindow) ${SCREENSHOT_DIR}/pic-window-${BASE_NAME}.png
+		message "pic-window"
+		;;
+	5*)
+		maim | xclip -selection clipboard -t image/png
+		message
+		;;
+	6*)
+		maim -s | xclip -selection clipboard -t image/png
+		message
+		;;
+	7*)
+		maim -i "$(xdotool getactivewindow)" | xclip -selection clipboard -t image/png
+		message
+		;;
+esac
+
+

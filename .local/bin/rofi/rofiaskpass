@@ -1,0 +1,16 @@
+#!/bin/bash
+# This script is the SUDO_ASKPASS variable, meaning that it will be used as a
+# password prompt if needed.
+
+# sudo prompt is "$1"
+# prompt="$(echo "$1" | sed -e "s/://g")"
+pass=$(echo | rofi -show -dmenu -i -l 0 -password -p "" -theme rofi-root) <&-
+
+if [[ "$pass" != "" ]]
+then
+	echo "$pass"
+else
+	exit
+fi
+
+
