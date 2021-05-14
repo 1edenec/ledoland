@@ -1,4 +1,5 @@
 #include        "./colors/sn"
+
 Xft.dpi:        129
 Xft.antialias:  true
 Xft.hinting:    true
@@ -7,8 +8,10 @@ Xft.autohint:   true
 Xft.hintstyle:  hintslight
 Xft.lcdfilter:  lcddefault
 Xcursor.theme:  volantes_light_cursors
+
 Xcursor.size :  24
 
 *.alpha:        0.97
+st.font:         monospace:size=10
 
 dmenu.font:     :size=15
