@@ -1,0 +1,4 @@
+#!/bin/bash
+# restart sxhkd if it running
+[[ -z $(pgrep polybar) ]] && ( dunstify "hui" )  ||  ( dunstify "nehui" )
+

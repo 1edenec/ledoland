@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Draw a floating kitty
+# Inspired by u/f0x52
+
+# Draw a rectangle using slop then read the geometry value
+read -r X Y W H < <(slop -f "%x %y %w %h" -b 4 -t 0 -q)
+
+# Create a variable to be used for URxvt flag option
+g=${W}x${H}+${X}+${Y}
+
+# Draw with floating rule
+
+bspc rule -a St -o sticky=on state=floating rectangle="$g"
+st &
+
+

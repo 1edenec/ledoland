@@ -1,0 +1,21 @@
+#!/bin/bash
+# window marker with notification
+did="-r 1204"
+
+switcher(){
+	[ -z "$(bspc query -N -n focused.$caser)" ] && text=$caser || text="un"$caser
+}
+
+case $1 in
+	marked)  caser="marked" ;;
+	locked)  caser="locked" ;;
+	sticky)  caser="sticky" ;;
+	private) caser="private";;
+esac
+
+switcher
+bspc node -g $1
+dunstify $did "BSPWM" $text
+echo $text
+
+

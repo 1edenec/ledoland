@@ -1,0 +1,10 @@
+#!/bin/bash
+# script to add oneshot rules
+
+
+if [ "$1" == "kitty" ]
+then
+	bspc rule -a  $1 --one-shot state=floating rectangle=1400x800+0+0 center on
+else
+	bspc rule -a  $1 --one-shot state=floating rectangle=1400x800+0+0 center on
+fi

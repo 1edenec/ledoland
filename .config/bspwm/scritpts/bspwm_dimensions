@@ -1,0 +1,22 @@
+#!/bin/bash
+# rule example:
+# bspc rule -a mpv state=floating sticky=on rectangle="$newwidth"x"$newheight"+"$hor"+"$vert"
+# and add next line to bspwmrc. POINT is important!
+# . ~/.config/bspwm/bspwm_mpv
+ # this is offset to show window border. just for fun
+
+offset=7
+#offset=$((2 * $(bspc config border_width)"))
+
+monwidth=$(xdotool getdisplaygeometry | awk '{print $1}')
+monheight=$(xdotool getdisplaygeometry | awk '{print $2}')
+
+newwidth=$((monwidth / 3))
+newheight=$((monheight / 3))
+
+hor=$((monwidth - newwidth - offset)) \
+vert=$((monheight - newheight - offset))
+
+# dimension for scratch terminal
+tmuxwidth=$(( monwidth - 16 ))
+tmuxvert=$(( 2 * newheight - offset ))

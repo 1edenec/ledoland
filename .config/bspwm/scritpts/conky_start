@@ -1,0 +1,5 @@
+#!/bin/bash
+killall conky 2>/dev/null
+
+bash -c "LC_ALL=C conky -q -c ~/.config/conky/cal"
+

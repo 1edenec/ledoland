@@ -1,0 +1,99 @@
+#!/bin/sh
+
+# script to change bspwm layout with rofi
+# all thanks here https://github.com/phenax/bsp-layout
+
+
+# Supported layouts
+
+#     tall - Master-stack with a tall window.
+
+# _______________
+# |        |____|
+# |        |____|
+# |        |____|
+# |________|____|
+
+#     rtall - Master-stack with a reversed tall window.
+
+# _______________
+# |____|        |
+# |____|        |
+# |____|        |
+# |____|________|
+
+#     wide - Master-stack with a wide window.
+
+# _______________
+# |             |
+# |             |
+# |_____________|
+# |____|____|___|
+
+#     rwide - Master-stack with a reversed wide window.
+
+# _______________
+# |____|____|___|
+# |             |
+# |             |
+# |_____________|
+
+#     even - Evenly balances all window areas
+
+# _______________
+# |___|____|____|
+# |___|____|____|
+# |___|____|____|
+
+# OR
+# _______________
+# |    |        |
+# |    |________|
+# |    |        |
+# |____|________|
+
+#     tiled - Default bspwm's tiled layout
+
+# _______________
+# |        |    |
+# |        |____|
+# |        |  | |
+# |________|__|_|
+
+#     monocle - Default bspwm's monocle layout
+
+# _______________
+# |             |
+# |             |
+# |             |
+# |_____________|
+
+##########################################################
+
+OPTIONS="tall\n\
+rtall\n\
+wide\n\
+rwide\n\
+even\n\
+tiled\n\
+rwide\n\
+monocle\n\
+clean"
+
+LAUNCHER="rofi -dmenu -l 5 -i -p Power"
+
+option=`echo -e $OPTIONS | $LAUNCHER`
+
+echo "$option"
+
+if [ $option = "clean" ]
+then
+	bsp-layout remove
+else
+	bsp-layout once "$option"
+fi
+
+
+
+
+

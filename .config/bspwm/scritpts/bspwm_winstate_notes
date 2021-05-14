@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# bad script to recognize state of BSPWM window and show notification
+layoutName="$(bspc query -T -n | sed  "s/.*\"state\":\"//;s/\"\,\".*//")"
+
+switcher(){
+	bspc node focused -t $1 && dunstify "BSPWM" $1 -r 1204 -i dialog-information
+}
+
+
+
+if [ "$1" == "astern" ]
+then
+	case  "$layoutName" in
+		tiled) switcher fullscreen ;;
+		pseudo_tiled) switcher tiled;;
+		floating) switcher pseudo_tiled;;
+		fullscreen) switcher floating;;
+	esac
+else
+	case  "$layoutName" in
+		tiled) switcher pseudo_tiled ;;
+		pseudo_tiled) switcher floating;;
+		floating) switcher fullscreen;;
+		fullscreen) switcher tiled;;
+	esac
+fi

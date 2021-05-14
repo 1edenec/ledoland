@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# This file runs when a DM logs you into a graphical session.
+# If you use startx/xinit like a Chad, this file will also be sourced.
+sxhkd &						# keyboard shortcut daemon
+remaps &					# run the remaps script, switching caps/esc and more; check it for more info
+dunst &						# dunst for notifications
+unclutter &					# Remove mouse when idle
+xsetroot -cursor_name left_ptr & #some fix for cursor
+numlockx &					# turn on numlock when xorg server started
+prime &						# because I'm using nvidia
+#eyewarn &					# script to keep eyes
+nm-applet &					# networkManager tray applet
+sleep 5 && redshift &		# color daemon
+

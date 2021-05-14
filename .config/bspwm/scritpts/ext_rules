@@ -1,0 +1,60 @@
+#!/bin/bash
+# xtittle and xdotool required!
+
+wid=$1
+class=$2
+instance=$3
+consequences=$4
+
+title=$(xprop -id "$1" WM_NAME | cut -d\" -f2)
+
+# uncomment to see parametres
+#dunstify "$wid" "class=$class\n title=$title\n instance=$instance\n consequences=$consequences"
+
+
+# PiP firefox
+if  [ "$class" = "LibreWolf" ]
+then
+	if [ "$title" = "Picture-in-Picture" ]
+	then
+		# String to take dimensions for floating windows
+		. ~/.local/bin/bspwm/bspwm_dimensions
+
+		# make window floating and sticky
+		echo "state=floating sticky=on rectangle=${newwidth}x${newheight}+${hor}+${vert}"
+	else
+		echo "desktop=^2 follow=on"
+	fi
+fi
+
+
+#Examples
+# if [ "$instance" = fontforge ] ; then
+# 	title=$(xtitle "$wid")
+# 	case "$title" in
+# 		Layers|Tools|Warning)
+# 			echo "focus = off"
+# 			;;
+# 	esac
+# fi
+
+# if [ "$instance" = oss-code ] ; then
+# 	title=$(xtitle "$wid")
+# 	case "$title" in
+# 		Layers|Tools|Warning)
+# 			echo "focus = off"
+# 			;;
+# 	esac
+# fi
+
+
+
+# case "$class" in
+# 	Doublecmd )
+# 		case "$(xprop -id "$wid" _NET_WM_WINDOW_TYPE)" in
+# 			*_NET_WM_WINDOW_TYPE_NORMAL* )
+# 				echo "state=floating rectangle=1400x800+0+0"
+# 				;;
+# 		esac
+# 		;;
+# esac
