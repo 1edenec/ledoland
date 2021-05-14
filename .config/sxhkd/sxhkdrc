@@ -6,7 +6,7 @@ super + shift + Return
 	~/.local/bin/eDEX-UI.Linux.x86_64.AppImage &
 
 super + space
-	rofi -modi drun -show drun
+	rofi -modi drun -show drun -theme rofiX
 super + shift + Tab
 	rofi -modi run,window -show window -window-thumbnail
 
@@ -19,7 +19,7 @@ super + Escape
 	$TERMINAL -e  nvim ~/.config/sxhkd/sxhkdrc
 
 # Programms
-#super + shift + y
+# super + shift + y
 #	( dunstify -i xt7-player-mpv "Player:" "mpv is on his way..." ) && \
 #	mpv $(xclip -o -selection primary)
 
@@ -29,19 +29,16 @@ super + {w,m,b,v}
 	scratch "scratch_btm" "btm", \
 	rofivirts}
 
-#calculator
+# calculator
 super + {shift,_} + a
 	{scratch "scratch_pulse" "pulsemixer", \
 	scratch_gui qalculate-gtk}
 
-super + e
-	pcmanstart
+# file-managers
+super + {_,shift} + e
+	{pcmanstart, $TERMINAL -e lfrun}
 
-super + shift + e
-	$TERMINAL -e nnn -a
-
-
-#lock screen
+# lock screen
 super + l
 	i3lock-fancy
 
@@ -51,7 +48,7 @@ super + F{1-9,10,11,12}
 	displayselect, \
 	rofipower, \
 	tortgl, \
-	dmenuqbnox, \
+	rofiqbnox, \
 	dmenuiwd -d, \
 	dmenubluetogle, \
 	rofimount, \
@@ -92,17 +89,18 @@ XF86MonBrightness{Down,Up}
 	brightControl {down,up}
 
 XF86Audio{Mute,LowerVolume,RaiseVolume}
-	volControl {mute,down,up}
+	pwControl {mute,down,up}
 
 # volume with mouse
 alt + button{2,4,5}
-	volControl {mute,up,down}
+	pwControl {mute,up,down}
 
 XF86TouchpadToggle
 	touchpadtoggle
 
 XF86WebCam
 	camtoggle
+
 #
 # bspwm hotkeys
 #
@@ -131,7 +129,7 @@ super + shift + f
 	bspwm_winstate_notes astern
 
 # set the node flags
-alt + {m,l,s,p}
+super + alt + {m,l,s,p}
 	win_flags {marked,locked,sticky,private}
 #
 # focus/swap
@@ -144,7 +142,6 @@ super + {_,shift + }{Left,Down,Up,Right}
 # focus the next/previous node in the current desktop
 super + {_,shift + }c
 	bspc node -f {next,prev}.local
-
 
 # focus or send to the given desktop
 super + {_,shift + }{1-9,0}
@@ -181,7 +178,6 @@ super + ctrl + space
 super + alt + {h,j,k,l}
 	resize {west,north,south,east}
 
-
 # move a floating window
 super + ctrl + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
@@ -195,13 +191,11 @@ super +{_,shift} + r
 	bspc node @/ -R {90,270}
 
 # hide/unhide windows
-super + h
-	bspc node -g hidden
-super + shift + h
-	bspc node {,$(bspc query -N -n .hidden | tail -n1)} -g hidden=off
+super + {shift,_} + h
+	unhider {unhide,hide}
 
 button9
-	volControl up
+	pwControl up
 
 button8
-	volControl down
+	pwControl down
